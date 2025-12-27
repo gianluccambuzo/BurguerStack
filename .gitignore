@@ -41,3 +41,4 @@ volume
 /dataSources/
 /dataSources.local.xml
 *.iml
+.idea
