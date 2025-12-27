@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  # -----------------------------------------------------------
+  # 1. Banco de Dados (PostgreSQL)
+  # -----------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    container_name: burguer-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: burguer-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # -----------------------------------------------------------
+  # 2. Interface Visual do Banco (PgAdmin4)
+  # -----------------------------------------------------------
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: burguer-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+  # -----------------------------------------------------------
+  # 3. Infraestrutura AWS Local (LocalStack - SQS)
+  # -----------------------------------------------------------
+  localstack:
+    image: localstack/localstack
+    container_name: burguer-localstack
+    ports:
+      - "4566:4566"            # Gateway principal da API AWS
+      - "4510-4559:4510-4559"  # Portas de serviços externos
+    environment:
+      - SERVICES=sqs,dynamodb  # Ativa apenas o que precisamos (economiza RAM)
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "./volume:/var/lib/localstack"           # Persistência de dados
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh" # Script de init
+
+volumes:
+  postgres_data:
