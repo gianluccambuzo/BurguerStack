@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"example/BurgerStack/model"
 	"example/BurgerStack/usecase"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -24,4 +25,32 @@ func (orderController *orderController) GetOrderList(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, orders)
+}
+
+func (orderController *orderController) GetOrderById(ctx *gin.Context) {
+	orderId := ctx.Param("id")
+
+	order, err := orderController.orderUseCase.GetOrderById(orderId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	ctx.JSON(http.StatusOK, order)
+
+}
+
+func (orderController *orderController) CreateOrder(ctx *gin.Context) {
+	var order model.Order
+
+	if err := ctx.ShouldBindJSON(&order); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	response, err := orderController.orderUseCase.CreateOrder(order)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	ctx.JSON(http.StatusOK, response)
+
 }
