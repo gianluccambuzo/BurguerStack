@@ -30,12 +30,25 @@ func (orderController *orderController) GetOrderList(ctx *gin.Context) {
 func (orderController *orderController) GetOrderById(ctx *gin.Context) {
 	orderId := ctx.Param("id")
 
-	order, err := orderController.orderUseCase.GetOrderById(orderId)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if orderId == "" {
+		response := model.Response{Message: "order id is empty"}
+		ctx.JSON(http.StatusBadRequest, response)
+		return
 	}
 
-	ctx.JSON(http.StatusOK, order)
+	order, err := orderController.orderUseCase.GetOrderById(orderId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	if order == nil {
+		response := model.Response{Message: "order not found"}
+		ctx.JSON(http.StatusNotFound, response)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, &order)
 
 }
 

@@ -20,7 +20,7 @@ func (ou *OrderUseCase) GetOrders() ([]model.Order, error) {
 	return ou.OrderRepository.GetOrders()
 }
 
-func (ou *OrderUseCase) GetOrderById(orderId string) (model.Order, error) {
+func (ou *OrderUseCase) GetOrderById(orderId string) (*model.Order, error) {
 	return ou.OrderRepository.GetOrderById(orderId)
 }
 

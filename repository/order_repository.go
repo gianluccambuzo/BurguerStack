@@ -48,30 +48,27 @@ func (ou *OrderRepository) GetOrders() ([]model.Order, error) {
 
 }
 
-func (ou *OrderRepository) GetOrderById(orderId string) (model.Order, error) {
+func (ou *OrderRepository) GetOrderById(orderId string) (*model.Order, error) {
 
-	query := "SELECT * FROM pedidos ORDER WHERE id=?"
-	rows, err := ou.connection.Query(query, orderId)
+	query, err := ou.connection.Prepare("SELECT * FROM pedidos WHERE id = $1")
 	if err != nil {
 		fmt.Println(err)
-		return model.Order{}, err
+		return nil, err
 	}
-	var order model.Order
-	for rows.Next() {
-		err = rows.Scan(
-			&order.ID,
-			&order.Cliente,
-			&order.Pedido,
-			&order.Status,
-			&order.CreatedAt)
 
-		if err != nil {
-			fmt.Println(err)
-			return model.Order{}, err
+	var order model.Order
+	err = query.QueryRow(orderId).Scan(
+		&order.ID, &order.Cliente, &order.Pedido, &order.Status, &order.CreatedAt)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
 		}
+		fmt.Println(err)
+		return nil, err
 	}
-	rows.Close()
-	return order, nil
+
+	return &order, nil
 }
 
 func (ou *OrderRepository) InsertOrder(order model.Order) (model.Order, error) {

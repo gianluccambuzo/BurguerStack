@@ -29,6 +29,7 @@ func main() {
 
 	server.GET("/orders", OrderController.GetOrderList)
 	server.POST("/orders", OrderController.CreateOrder)
+	server.GET("/orders/:id", OrderController.GetOrderById)
 
 	server.Run(":8080")
 }
