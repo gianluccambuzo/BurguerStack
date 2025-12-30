@@ -18,6 +18,15 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  go-app:
+    container_name: go-app
+    image: go-api
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
   # -----------------------------------------------------------
   # 2. Interface Visual do Banco (PgAdmin4)
   # -----------------------------------------------------------
