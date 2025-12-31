@@ -93,3 +93,16 @@ func (ou *OrderRepository) InsertOrder(order model.Order) (model.Order, error) {
 	query.Close()
 	return order, nil
 }
+
+func (ou *OrderRepository) UpdateOrderStatus(id string, status string) {
+	query, err := ou.connection.Prepare("UPDATE pedidos " +
+		"SET status = $2 WHERE id = $1")
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	query.QueryRow(id, status)
+	query.Close()
+}

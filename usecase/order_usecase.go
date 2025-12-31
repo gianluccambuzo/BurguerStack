@@ -41,6 +41,11 @@ func (ou *OrderUseCase) CreateOrder(order model.Order) (model.Order, error) {
 	return insertedOrder, err
 }
 
+func (ou *OrderUseCase) UpdateOrderStatus(id string, status string) {
+
+	ou.OrderRepository.UpdateOrderStatus(id, status)
+}
+
 func publishOrderSqs(order model.Order) {
 
 	sqsClient := sqsConfig.NewSqsClient()
