@@ -5,6 +5,7 @@ type Order struct {
 	Cliente   string      `json:"cliente"`
 	Pedido    string      `json:"pedido"`
 	Status    OrderStatus `json:"status"`
+	Valor     float64     `json:"valor"`
 	CreatedAt string      `json:"created_at"`
 }
 

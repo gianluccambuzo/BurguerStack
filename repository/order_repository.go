@@ -32,6 +32,7 @@ func (ou *OrderRepository) GetOrders() ([]model.Order, error) {
 			&order.Cliente,
 			&order.Pedido,
 			&order.Status,
+			&order.Valor,
 			&order.CreatedAt)
 
 		if err != nil {
@@ -74,16 +75,16 @@ func (ou *OrderRepository) GetOrderById(orderId string) (*model.Order, error) {
 func (ou *OrderRepository) InsertOrder(order model.Order) (model.Order, error) {
 
 	query, err := ou.connection.Prepare("INSERT INTO pedidos " +
-		"(id, cliente, item, status) " +
-		"VALUES($1, $2, $3, $4) RETURNING id, cliente, item, status, created_at")
+		"(id, cliente, item, status, valor) " +
+		"VALUES($1, $2, $3, $4, $5) RETURNING id, cliente, item, status, valor, created_at")
 
 	if err != nil {
 		fmt.Println(err)
 		return model.Order{}, err
 	}
 
-	err = query.QueryRow(order.ID, order.Cliente, order.Pedido, order.Status).Scan(
-		&order.ID, &order.Cliente, &order.Pedido, &order.Status, &order.CreatedAt)
+	err = query.QueryRow(order.ID, order.Cliente, order.Pedido, order.Status, order.Valor).Scan(
+		&order.ID, &order.Cliente, &order.Pedido, &order.Status, &order.Valor, &order.CreatedAt)
 
 	if err != nil {
 		fmt.Println(err)

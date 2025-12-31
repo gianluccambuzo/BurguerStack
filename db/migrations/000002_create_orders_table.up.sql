@@ -1,0 +1,1 @@
+ALTER TABLE pedidos ADD COLUMN valor real NOT NULL default 0.0
