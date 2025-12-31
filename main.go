@@ -1,8 +1,8 @@
 package main
 
 import (
+	"example/BurgerStack/config/db"
 	"example/BurgerStack/controller"
-	"example/BurgerStack/db"
 	"example/BurgerStack/repository"
 	"example/BurgerStack/usecase"
 	"github.com/gin-gonic/gin"
