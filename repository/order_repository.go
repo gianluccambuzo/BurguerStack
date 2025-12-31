@@ -94,7 +94,7 @@ func (ou *OrderRepository) InsertOrder(order model.Order) (model.Order, error) {
 	return order, nil
 }
 
-func (ou *OrderRepository) UpdateOrderStatus(id string, status string) {
+func (ou *OrderRepository) UpdateOrderStatus(id string, status model.OrderStatus) {
 	query, err := ou.connection.Prepare("UPDATE pedidos " +
 		"SET status = $2 WHERE id = $1")
 

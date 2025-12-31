@@ -32,7 +32,7 @@ func (ou *OrderUseCase) GetOrderById(orderId string) (*model.Order, error) {
 
 func (ou *OrderUseCase) CreateOrder(order model.Order) (model.Order, error) {
 	order.ID = uuid.NewString()
-	order.Status = "RECEBIDO"
+	order.Status = model.RECEIVED
 
 	var insertedOrder, err = ou.OrderRepository.InsertOrder(order)
 
@@ -41,7 +41,7 @@ func (ou *OrderUseCase) CreateOrder(order model.Order) (model.Order, error) {
 	return insertedOrder, err
 }
 
-func (ou *OrderUseCase) UpdateOrderStatus(id string, status string) {
+func (ou *OrderUseCase) UpdateOrderStatus(id string, status model.OrderStatus) {
 
 	ou.OrderRepository.UpdateOrderStatus(id, status)
 }

@@ -93,12 +93,12 @@ func processMessage(client *sqs.Client, queueURL string, msg types.Message, useC
 	// B. Lógica de Negócio (aqui você salvaria no banco, enviaria email, etc)
 	fmt.Printf("📦 Processando Pedido: ID=%s | Cliente=%s | Pedido=%s | Status=%s \n", order.ID, order.Cliente, order.Pedido, order.Status)
 	time.Sleep(10 * time.Second)
-	useCase.UpdateOrderStatus(order.ID, "EM_PROCESSAMENTO")
-	fmt.Printf("Pedido processado ID=%s alterado para status %s\n", order.ID, "EM_PROCESSAMENTO")
+	useCase.UpdateOrderStatus(order.ID, model.PROCESSING)
+	fmt.Printf("Pedido processado ID=%s alterado para status %s\n", order.ID, model.PROCESSING)
 
 	time.Sleep(10 * time.Second)
-	useCase.UpdateOrderStatus(order.ID, "PRONTO")
-	fmt.Printf("Pedido processado ID=%s alterado para status %s\n", order.ID, "PRONTO")
+	useCase.UpdateOrderStatus(order.ID, model.READY)
+	fmt.Printf("Pedido processado ID=%s alterado para status %s\n", order.ID, model.READY)
 
 	// C. Deletar a mensagem da fila (Passo CRUCIAL)
 	// Se não deletar, o SQS entrega ela de novo depois do VisibilityTimeout
